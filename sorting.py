@@ -5,6 +5,10 @@ Created on Tue Oct  8 14:05:22 2019
 @author: DSU
 """
 
+# list of all sorting functions
+algorithms = [bubbleSort, insertionSort, mergeSort, quickSort, quickSortNaive,\
+              timSort]
+
 def bubbleSort(arr): 
     # traverse through all array elements 
     for i in range(len(arr)): 
@@ -103,7 +107,7 @@ def partitionNaive(arr, low, high):
     return ( i+1 ) 
 
 def quickSortNaiveWorker(arr, low, high):       
-    if low < high: 
+    if low <= high: 
         # pi is partitioning index, arr[p] is now 
         # at right place 
         pi = partition(arr,low,high)
@@ -116,11 +120,15 @@ def quickSortNaiveWorker(arr, low, high):
 def quickSortNaive(arr):
     return quickSortNaiveWorker(arr, 0, len(arr) - 1)
 
+# python's built in sorting function
+def timSort(arr):
+    arr.sort()
+
 """
 correctness tests section
 driver code to make sure all sorting functions work
 """
-if __name__ == '__main__':        
+if __name__ == '__main__':
     from random import sample
     from tqdm import trange
     
@@ -138,11 +146,8 @@ if __name__ == '__main__':
     # checks each algorithm for correctness
     def checkAlgorithms(arr, verbose=False):
         if verbose: print(f'unsorted:\t{arr_original}')
-        assert checkSortCorrectness(bubbleSort, arr, verbose)
-        assert checkSortCorrectness(insertionSort, arr, verbose)
-        assert checkSortCorrectness(mergeSort, arr, verbose)
-        assert checkSortCorrectness(quickSort, arr, verbose)
-        assert checkSortCorrectness(quickSortNaive, arr, verbose)
+        for algo in algorithms:
+            assert checkSortCorrectness(algo, arr, verbose)
     
     # Check algorithms visually with small list
     print('Check visually:')
@@ -156,14 +161,4 @@ if __name__ == '__main__':
         checkAlgorithms(arr_original)
     
     # all algorithms correctly sorted the list
-    print('\nAll algorithms correctly sorted the listss.')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    print('\nAll algorithms correctly sorted the lists.')
