@@ -5,10 +5,6 @@ Created on Tue Oct  8 14:05:22 2019
 @author: DSU
 """
 
-# list of all sorting functions
-algorithms = [bubbleSort, insertionSort, mergeSort, quickSort, quickSortNaive,\
-              timSort]
-
 def bubbleSort(arr): 
     # traverse through all array elements 
     for i in range(len(arr)): 
@@ -92,37 +88,58 @@ def quickSortWorker(arr, low, high):
 def quickSort(arr):
     return quickSortWorker(arr, 0, len(arr) - 1)
 
-def partitionNaive(arr, low, high): 
-    i = (low - 1)         # index of smaller element 
-    pivot = arr[0]        # pivot 
+def quickSortNaiveWorker(arr):
+    # Base case 
+    if len(arr) <= 1: return arr
+    
+    # Let us choose first element as pivot 
+    else: 
+        mid = 0
+        pivot = arr[0] 
   
-    for j in range(low , high): 
-        # ff current element is smaller than the pivot 
-        if   arr[j] < pivot:
-            # increment index of smaller element 
-            i = i+1 
-            arr[i],arr[j] = arr[j],arr[i] 
+        # key element is used to break the array 
+        # into 2 halves according to their values 
+        smaller,greater = [],[] 
+   
+        # Put greater elements in greater list, 
+        # smaller elements in smaller list. Also, 
+        # compare positions to decide where to put. 
+        for indx, val in enumerate(arr): 
+            if indx != mid: 
+                if val < pivot: 
+                    smaller.append(val) 
+                elif val > pivot: 
+                    greater.append(val) 
   
-    arr[i+1],arr[high] = arr[high],arr[i+1] 
-    return ( i+1 ) 
-
-def quickSortNaiveWorker(arr, low, high):       
-    if low <= high: 
-        # pi is partitioning index, arr[p] is now 
-        # at right place 
-        pi = partition(arr,low,high)
+                # If value is same, then considering 
+                # position to decide the list. 
+                else: 
+                    if indx < mid: 
+                        smaller.append(val) 
+                    else: 
+                        greater.append(val) 
         
-        # Separately sort elements before 
-        # partition and after partition 
-        quickSortNaiveWorker(arr, low, pi-1) 
-        quickSortNaiveWorker(arr, pi+1, high) 
+        return quickSortNaiveWorker(smaller)+[pivot]+\
+                    quickSortNaiveWorker(greater) 
 
 def quickSortNaive(arr):
-    return quickSortNaiveWorker(arr, 0, len(arr) - 1)
+    for i, x in enumerate(quickSortNaiveWorker(arr)):
+        arr[i] = x
 
-# python's built in sorting function
+# python's built in sorting function (way faster since it's written in c)
 def timSort(arr):
     arr.sort()
+
+# the worst algorithm I could think of - only added for reference
+def facSort(arr):
+    from itertools import permutations
+    for arr1 in permutations(arr, len(arr)):
+        if all(a <= b for a, b in zip(arr1, arr1[1:])):
+            return arr1
+
+# list of all sorting functions
+algorithms = [bubbleSort, insertionSort, mergeSort, quickSort, quickSortNaive,\
+              timSort]
 
 """
 correctness tests section
@@ -134,7 +151,7 @@ if __name__ == '__main__':
     
     # verifies a list is sorted
     def verifySorted(arr):
-        return all(a < b for a, b in zip(arr, arr[1:]))
+        return all(a <= b for a, b in zip(arr, arr[1:]))
     
     # returns True iff the algorithm sorts the function
     def checkSortCorrectness(algorithm, arr, verbose):
