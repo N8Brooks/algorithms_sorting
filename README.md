@@ -31,6 +31,7 @@ performance.py arg1 arg2
 		* divide			mergeSort, quickSort, quickSortNaive, timSort
 		* quickunsorted		compares quickSort and quickSortNaive with unsorted lists
 		* quicksorted		compares quickSort and quickSortNaive with sorted lists
+			* will run into recursion errors with larger numbers (>800)
 		* _					use a single algorithm's name to only time it
 	* arg2 is which power of 2 items the max list size will be, exclusive
 		* arg2 == 5 would make 2^(5-1) == 16 items
